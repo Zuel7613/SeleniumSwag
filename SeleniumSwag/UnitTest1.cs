@@ -7,38 +7,31 @@ namespace SeleniumSwag
     public class Tests
     {
         IWebDriver webDriver;
-        IWebElement userName;
-        IWebElement userPassword;
-        IWebElement loginButton;
+        LoginPage loginPage;
+        InventoryPage inventoryPage;
 
         [SetUp]
         public void Setup()
         {
             webDriver = new ChromeDriver();
+            loginPage = new LoginPage(webDriver);
+            inventoryPage = new InventoryPage(webDriver);
             webDriver.Navigate().GoToUrl("https://www.saucedemo.com/");
-            userName = webDriver.FindElement(By.Id("user-name"));
-            userPassword = webDriver.FindElement(By.Id("password"));
-            loginButton = webDriver.FindElement(By.Id("login-button"));
         }
 
         [Test]
         public void LoginSuccessful()
         {
-            userName.SendKeys("standard_user");
-            userPassword.SendKeys("secret_sauce");
-            loginButton.Click();
-            var appLogo = webDriver.FindElement(By.Id("app_logo"));
-            Assert.IsTrue(appLogo.Displayed);
+            loginPage.UserLogin("standard_user", "secret_sauce");
+            var appLogo = inventoryPage.GetLogo();
+            Assert.IsTrue(appLogo.Displayed, "Verify that the application logo is displayed");
         }
 
         [Test]
         public void LoginFailure()
         {
-            userName.SendKeys("locked_out_user");
-            userPassword.SendKeys("secret_sauce");
-            loginButton.Click();
-            var errorMessage = webDriver.FindElement(By.ClassName("error-button"));
-            Assert.IsTrue(errorMessage.Text.Equals("Epic sadface: Sorry, this user has been locked out."));
+            loginPage.UserLogin("locked_out_user", "secret_sauce");
+            Assert.IsTrue(loginPage.ErrorMessage().Contains("Sorry, this user has been banned."), "Verify that the error message is displayed.");
         }
     }
 }
