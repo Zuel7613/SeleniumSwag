@@ -16,6 +16,8 @@ namespace SeleniumSwag
         private By loginControl = By.Id("login-button");
         private By errorMessage = By.Id("error-message-container");
 
+        public string ErrorMessage => driver.FindElement(errorMessage).Text;
+
         public LoginPage(IWebDriver driver)
         {
             this.driver = driver;
@@ -26,11 +28,6 @@ namespace SeleniumSwag
             driver.FindElement(userNameControl).SendKeys(username);
             driver.FindElement(passwordControl).SendKeys(password);
             driver.FindElement(loginControl).Click();
-        }
-
-        public string ErrorMessage()
-        {
-            return driver.FindElement(errorMessage).Text;
         }
     }
 }

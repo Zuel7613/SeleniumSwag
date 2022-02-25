@@ -31,7 +31,7 @@ namespace SeleniumSwag
         public void LoginFailure()
         {
             loginPage.UserLogin("locked_out_user", "secret_sauce");
-            Assert.IsTrue(loginPage.ErrorMessage().Contains("Sorry, this user has been banned."), "Verify that the error message is displayed.");
+            Assert.IsTrue(loginPage.ErrorMessage.Contains("Sorry, this user has been banned."), "Verify that the error message is displayed.");
         }
     }
 }
